@@ -1,4 +1,4 @@
-// 方法：4/3/2 计时复述（Maurice, 1983）——同一内容讲 3 遍，时间 4→3→2 分钟逼出流利度
+// Method: 4/3/2 (Maurice, 1983). Retell the same content 3 times, time drops 4 -> 3 -> 2 min.
 import type { Lang, Sentence } from '../content/content';
 import { getState } from '../state/store';
 import { RecordingController } from '../speech/speech';
@@ -6,14 +6,14 @@ import { recordPractice } from '../state/store';
 import type { PracticeController } from './types';
 
 const ROUNDS = [
-  { label: '第 1 轮 · 4 分钟', sec: 240 },
-  { label: '第 2 轮 · 3 分钟', sec: 180 },
-  { label: '第 3 轮 · 2 分钟', sec: 120 },
+  { label: 'Round 1 · 4 min', sec: 240 },
+  { label: 'Round 2 · 3 min', sec: 180 },
+  { label: 'Round 3 · 2 min', sec: 120 },
 ];
 
 export class FourThreeTwo implements PracticeController {
   readonly id = 'fourThreeTwo';
-  readonly label = '4/3/2 复述';
+  readonly label = '4/3/2 Retelling';
   readonly lang: Lang;
   private host!: HTMLElement;
   private material: Sentence[] = [];
@@ -48,7 +48,7 @@ export class FourThreeTwo implements PracticeController {
     this.host.innerHTML = `
       <div class="f432">
         <div class="panel" style="margin-bottom:16px">
-          <h4>本轮材料（用英语/日语把它复述出来）</h4>
+          <h4>Source material (retell it aloud)</h4>
           <div class="f432-material">
             ${this.material.map((s) => `<div class="f432-line">${this.text(s)}</div>`).join('')}
           </div>
@@ -57,8 +57,8 @@ export class FourThreeTwo implements PracticeController {
           <div class="f432-round" data-role="roundLabel">${ROUNDS[0].label}</div>
           <div class="f432-timer" data-role="timer">04:00</div>
           <div class="controls">
-            <button class="ctrl-btn" data-act="startRound">开始本轮（计时 + 录音）</button>
-            <button class="ctrl-btn done" data-act="stopRound" disabled>停止本轮</button>
+            <button class="ctrl-btn" data-act="startRound">Start round (timer + recording)</button>
+            <button class="ctrl-btn done" data-act="stopRound" disabled>Stop round</button>
           </div>
           <div class="score-box on" data-role="result" style="margin-top:14px"></div>
           <div class="f432-progress" data-role="progress"></div>
@@ -77,7 +77,7 @@ export class FourThreeTwo implements PracticeController {
 
   private startRound(): void {
     if (this.roundIdx >= ROUNDS.length) {
-      this.host.querySelector('[data-role="roundLabel"]')!.textContent = '已完成三轮';
+      this.host.querySelector('[data-role="roundLabel"]')!.textContent = 'All three rounds done.';
       return;
     }
     const st = getState();
@@ -111,13 +111,13 @@ export class FourThreeTwo implements PracticeController {
       const stopBtn = this.host.querySelector('[data-act="stopRound"]') as HTMLButtonElement;
       stopBtn.disabled = true;
       const result = this.host.querySelector('[data-role="result"]') as HTMLElement;
-      result.innerHTML = `<div class="score-info"><b>${ROUNDS[this.roundIdx].label} · ${sec}s · ${wpm ? wpm + ' 词/分' : '（未识别，请以录音为准）'}</b><span>${r.recognized ? '你说：' + r.recognized : '已录音'}</span></div>`;
+      result.innerHTML = `<div class="score-info"><b>${ROUNDS[this.roundIdx].label} · ${sec}s · ${wpm ? wpm + ' wpm' : '(not recognized, trust your recording)'}</b><span>${r.recognized ? 'You said: ' + r.recognized : 'Recorded.'}</span></div>`;
       this.roundIdx++;
       if (this.roundIdx < ROUNDS.length) {
         btn.disabled = false;
         this.host.querySelector('[data-role="roundLabel"]')!.textContent = ROUNDS[this.roundIdx].label;
       } else {
-        this.host.querySelector('[data-role="roundLabel"]')!.textContent = '已完成三轮';
+        this.host.querySelector('[data-role="roundLabel"]')!.textContent = 'All three rounds done.';
         btn.disabled = true;
       }
       this.renderProgress();
@@ -127,7 +127,7 @@ export class FourThreeTwo implements PracticeController {
   private renderProgress(): void {
     const box = this.host.querySelector('[data-role="progress"]') as HTMLElement;
     box.innerHTML = this.roundStats
-      .map((r, i) => `<div class="f432-stat">${ROUNDS[i].label.split('·')[1]?.trim() ?? ''}：${r.sec}s · ${r.words ? Math.round((r.words / r.sec) * 60) + '词/分' : '—'}</div>`)
+      .map((r, i) => `<div class="f432-stat">${ROUNDS[i].label.split('·')[1]?.trim() ?? ''}: ${r.sec}s · ${r.words ? Math.round((r.words / r.sec) * 60) + ' wpm' : '—'}</div>`)
       .join('');
   }
 

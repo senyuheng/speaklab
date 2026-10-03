@@ -1,4 +1,4 @@
-// 应用路由与装配：导航 → 视图 → 方法控制器
+// Routing and assembly: nav -> view -> practice controller
 import type { Lang } from './content/content';
 import { $ } from './lib/util';
 import { renderDashboard } from './views/dashboard';
@@ -22,15 +22,15 @@ interface MethodEntry {
 }
 
 const EN_METHODS: MethodEntry[] = [
-  { id: 'shadowing', label: '影子跟读', create: (l) => new Shadowing(l) },
-  { id: 'fourThreeTwo', label: '4/3/2 复述', create: (l) => new FourThreeTwo(l) },
-  { id: 'minimalPairs', label: '最小对立对', create: () => new MinimalPairs() },
-  { id: 'monologue', label: '限时独白', create: (l) => new TimedMonologue(l) },
+  { id: 'shadowing', label: 'Shadowing', create: (l) => new Shadowing(l) },
+  { id: 'fourThreeTwo', label: '4/3/2 Retelling', create: (l) => new FourThreeTwo(l) },
+  { id: 'minimalPairs', label: 'Minimal Pairs', create: () => new MinimalPairs() },
+  { id: 'monologue', label: 'Timed Monologue', create: (l) => new TimedMonologue(l) },
 ];
 const JA_METHODS: MethodEntry[] = [
-  { id: 'shadowing', label: '影子跟读', create: (l) => new Shadowing(l) },
-  { id: 'fourThreeTwo', label: '4/3/2 复述', create: (l) => new FourThreeTwo(l) },
-  { id: 'monologue', label: '限时独白', create: (l) => new TimedMonologue(l) },
+  { id: 'shadowing', label: 'Shadowing', create: (l) => new Shadowing(l) },
+  { id: 'fourThreeTwo', label: '4/3/2 Retelling', create: (l) => new FourThreeTwo(l) },
+  { id: 'monologue', label: 'Timed Monologue', create: (l) => new TimedMonologue(l) },
 ];
 
 let activeLang: Lang | null = null;
@@ -59,8 +59,8 @@ export function renderLangView(lang: Lang): void {
   main.innerHTML = `
     <div class="train-head">
       <div class="section-head" style="margin:0">
-        <h2>${lang === 'en' ? 'English Speaking · 英语口语' : '日本語 Speaking · 日语口语'}</h2>
-        <p>${lang === 'en' ? '跟读 · 复述 · 发音 · 独白' : '英语为桥，先开口再说'} · <span class="accent-pill" style="padding:3px 10px;font-size:11.5px"><span class="accent-dot"></span><span id="langAccentLabel">${accentLabel(getState().settings.accent)}</span></span></p>
+        <h2>${lang === 'en' ? 'English Speaking' : 'Japanese Speaking'}</h2>
+        <p>${lang === 'en' ? 'Shadow · Retell · Pronounce · Monologue' : 'English bridges you in first'} · <span class="accent-pill" style="padding:3px 10px;font-size:11.5px"><span class="accent-dot"></span><span id="langAccentLabel">${accentLabel(getState().settings.accent)}</span></span></p>
       </div>
       <div class="mode-tabs" id="methodTabs">
         ${entries.map((m, i) => `<button data-f="${i}" class="${i === 0 ? 'active' : ''}">${m.label}</button>`).join('')}
@@ -92,7 +92,7 @@ export function route(view: ViewId): void {
   else if (view === 'library') renderLibrary(main);
   else if (view === 'settings') {
     renderSettings(main, () => {
-      // 口音切换后，刷新当前练习的注音
+      // after an accent change, refresh the current drill's IPA
       if (activeLang && activeEntry) {
         const host = $<HTMLElement>('methodHost');
         mountMethod(activeLang, activeEntry, host);

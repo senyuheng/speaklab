@@ -1,8 +1,6 @@
-// 通用工具：DOM 选择 / toast / 日期 / 唯一 id
-
 export const $ = <T extends HTMLElement>(id: string): T => {
   const el = document.getElementById(id) as T | null;
-  if (!el) throw new Error(`#${id} 不存在`);
+  if (!el) throw new Error(`#${id} not found`);
   return el;
 };
 

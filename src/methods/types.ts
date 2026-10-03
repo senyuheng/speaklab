@@ -1,11 +1,11 @@
-// 方法层：统一练习接口。每种练习实现同一契约，视图/路由只依赖接口，可插拔
+// Method layer: one shared practice contract. Every drill implements it; views/routing depend only on the interface.
 import type { Lang } from '../content/content';
 
 export interface PracticeController {
   readonly id: string;
   readonly label: string;
   readonly lang: Lang;
-  /** 挂载到宿主元素并渲染自身 UI 与交互 */
+  /** Mount into the host element and render its own UI and interactions */
   mount(host: HTMLElement): void;
   destroy(): void;
 }

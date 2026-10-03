@@ -1,7 +1,3 @@
-// 近似匹配评分：基于字符 bigram 的 Dice 系数
-// 仅作参考（浏览器 ASR 识别文本 vs 目标文本），不替代录音自听
-// 纯函数，便于单元测试
-
 function normalize(s: string): string {
   return s
     .toLowerCase()

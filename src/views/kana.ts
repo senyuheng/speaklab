@@ -1,4 +1,4 @@
-// 视图：五十音（参考资料 + 点读）
+// View: Kana reference (tap to hear)
 import { KANA, type KanaSet } from '../content/content';
 import { getState } from '../state/store';
 import { speak } from '../speech/speech';
@@ -7,10 +7,10 @@ export function renderKana(host: HTMLElement): void {
   let set: KanaSet = 'hiragana';
 
   host.innerHTML = `
-    <div class="section-head"><h2>五十音 · Kana</h2><p>点按发音，先建立音感</p></div>
+    <div class="section-head"><h2>Kana reference</h2><p>Tap to hear the sound and build an ear for Japanese</p></div>
     <div class="kana-tabs">
-      <button data-k="hiragana" class="active">平假名 Hiragana</button>
-      <button data-k="katakana">片假名 Katakana</button>
+      <button data-k="hiragana" class="active">Hiragana</button>
+      <button data-k="katakana">Katakana</button>
     </div>
     <div class="kana-grid"></div>
   `;

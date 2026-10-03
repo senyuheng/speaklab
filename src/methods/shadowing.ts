@@ -1,6 +1,6 @@
-// 方法：影子跟读（核心）。听 → 跟读 → 录音 → 自检对比 → 标记完成
+// Method: Shadowing (core). Listen -> shadow -> record -> self-check -> done.
 import type { Lang } from '../content/content';
-import { EN_CATS, JA_CATS, catName, type Sentence } from '../content/content';
+import { catName, type Sentence } from '../content/content';
 import { getState, recordPractice } from '../state/store';
 import { sentenceIpa } from '../state/settings';
 import { speak, RecordingController } from '../speech/speech';
@@ -14,7 +14,7 @@ interface Row {
 
 export class Shadowing implements PracticeController {
   readonly id = 'shadowing';
-  readonly label = '影子跟读';
+  readonly label = 'Shadowing';
   readonly lang: Lang;
   private host!: HTMLElement;
   private cat = 0;
@@ -60,7 +60,7 @@ export class Shadowing implements PracticeController {
   }
 
   private cats(): string[] {
-    return this.lang === 'en' ? EN_CATS : JA_CATS;
+    return this.lang === 'en' ? ['Self Introduction', 'Ordering Food', 'Daily Small Talk', 'Opinions & Feelings'] : ['Self Introduction', 'At a Café', 'Study & Work', 'Daily Life'];
   }
 
   private render(): void {
@@ -73,21 +73,21 @@ export class Shadowing implements PracticeController {
       <div class="trainer">
         <div class="lesson">
           <div class="idx" data-role="idx"></div>
-          <div class="lang-line"><span class="pill-tag ${this.lang === 'en' ? 'en' : 'ja'}">${this.lang === 'en' ? 'EN' : '日'}</span><span data-role="catName"></span></div>
+          <div class="lang-line"><span class="pill-tag ${this.lang === 'en' ? 'en' : 'ja'}">${this.lang === 'en' ? 'EN' : 'JA'}</span><span data-role="catName"></span></div>
           <div class="sentence ${this.lang === 'ja' ? 'ja' : ''}" data-role="sentence">—</div>
           <div class="ipa" data-role="ipa"></div>
-          <div class="meaning" data-role="meaning"></div>
+          <div class="meaning" data-role="gloss"></div>
           <div class="controls">
-            <button class="ctrl-btn speak" data-act="listen">🔊 听标准音</button>
-            <button class="ctrl-btn" data-act="record">🎙 录音</button>
-            <button class="ctrl-btn" data-act="play" disabled>▶ 播放我的录音</button>
-            <button class="ctrl-btn done" data-act="done">完成 ✓</button>
+            <button class="ctrl-btn speak" data-act="listen">Listen (standard)</button>
+            <button class="ctrl-btn" data-act="record">Record</button>
+            <button class="ctrl-btn" data-act="play" disabled>Play mine</button>
+            <button class="ctrl-btn done" data-act="done">Done</button>
           </div>
-          <div class="rec-bar" data-role="recbar"><div class="dots"><i></i><i></i><i></i><i></i></div><span>正在录音…请跟着读</span></div>
+          <div class="rec-bar" data-role="recbar"><div class="dots"><i></i><i></i><i></i><i></i></div><span>Recording... follow along now.</span></div>
           <div class="score-box" data-role="score"></div>
         </div>
         <div class="panel">
-          <h4>本组句子</h4>
+          <h4>Sentences in this set</h4>
           <div class="list-nav" data-role="list"></div>
         </div>
       </div>
@@ -97,7 +97,7 @@ export class Shadowing implements PracticeController {
       catName: this.host.querySelector('[data-role="catName"]') as HTMLElement,
       sentence: this.host.querySelector('[data-role="sentence"]') as HTMLElement,
       ipa: this.host.querySelector('[data-role="ipa"]') as HTMLElement,
-      meaning: this.host.querySelector('[data-role="meaning"]') as HTMLElement,
+      gloss: this.host.querySelector('[data-role="gloss"]') as HTMLElement,
       recbar: this.host.querySelector('[data-role="recbar"]') as HTMLElement,
       score: this.host.querySelector('[data-role="score"]') as HTMLElement,
       list: this.host.querySelector('[data-role="list"]') as HTMLElement,
@@ -155,7 +155,7 @@ export class Shadowing implements PracticeController {
       this.els.ipa.textContent = '';
       this.els.ipa.style.display = 'none';
     }
-    this.els.meaning.textContent = sentence.meaning;
+    this.els.gloss.textContent = sentence.gloss;
     this.els.score.classList.remove('on');
     this.els.score.innerHTML = '';
     this.els.recbar.classList.remove('on');
@@ -185,7 +185,7 @@ export class Shadowing implements PracticeController {
   private async toggleRecord(btn: HTMLElement): Promise<void> {
     if (!this.rec) return;
     if (this.rec.recording) {
-      btn.textContent = '🎙 录音';
+      btn.textContent = 'Record';
       btn.classList.remove('recording');
       this.els.recbar.classList.remove('on');
       this.rec.stop((r) => {
@@ -205,11 +205,11 @@ export class Shadowing implements PracticeController {
     const st = getState();
     try {
       await this.rec.start(this.lang, st.settings.accent, st.settings.score === 'on');
-      btn.textContent = '⏹ 停止';
+      btn.textContent = 'Stop';
       btn.classList.add('recording');
       this.els.recbar.classList.add('on');
     } catch (err) {
-      alert('无法使用麦克风：' + ((err as Error).message || '请检查权限'));
+      alert('Microphone unavailable: ' + ((err as Error).message || 'check permissions'));
     }
   }
 
@@ -221,15 +221,14 @@ export class Shadowing implements PracticeController {
     const box = this.els.score;
     box.classList.add('on');
     let pct = 0;
-    const heardText = heard;
-    if (heardText) pct = similarity(target, heardText);
+    if (heard) pct = similarity(target, heard);
     const c = pct >= 75 ? 'var(--good)' : pct >= 50 ? '#c07f1d' : pct >= 25 ? 'var(--warn)' : 'var(--ja)';
-    const lab = pct >= 75 ? '很棒，接近标准' : pct >= 50 ? '不错，再顺一点' : pct >= 25 ? '能听懂，继续练' : '差得较多，多听多读';
+    const lab = pct >= 75 ? 'Great, close to standard.' : pct >= 50 ? 'Good, aim for smoother.' : pct >= 25 ? 'Understandable, keep going.' : 'Needs work, listen and repeat more.';
     box.innerHTML = `
       <div class="score-row">
         <div class="score-ring" style="--v:${pct};--score-c:${c}"><span>${pct}%</span></div>
-        <div class="score-info"><b>近似匹配 · 仅供参考</b><span>${heardText ? lab : '已录下你的声音，请播放对比原音'}</span>
-        ${heardText ? `<div class="you-said">你说：${heardText}</div>` : ''}</div>
+        <div class="score-info"><b>Approx. match, for reference only</b><span>${heard ? lab : 'Recorded. Play it back and compare with the standard.'}</span>
+        ${heard ? `<div class="you-said">You said: ${heard}</div>` : ''}</div>
       </div>`;
   }
 

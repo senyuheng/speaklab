@@ -1,4 +1,4 @@
-// Web Speech Recognition API 类型声明（浏览器私有/实验性 API）
+// Web Speech Recognition API types (browser private / experimental)
 interface SpeechRecognitionAlternative {
   transcript: string;
   confidence: number;

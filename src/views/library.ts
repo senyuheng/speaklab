@@ -1,4 +1,4 @@
-// 视图：句库（搜索 / 添加 / 批量导入 / 删除 / 试听）
+// View: Library (search / add / batch import / delete / listen)
 import type { Sentence } from '../content/content';
 import { getState, setState } from '../state/store';
 import { speak } from '../speech/speech';
@@ -6,27 +6,27 @@ import { uid, toast } from '../lib/util';
 
 export function renderLibrary(host: HTMLElement): void {
   host.innerHTML = `
-    <div class="section-head"><h2>句库 Library</h2><p>你所有要开口练的句子，可添加、导入、删除</p></div>
+    <div class="section-head"><h2>Library</h2><p>Every sentence you practice lives here - add, import, delete</p></div>
     <div class="lib-toolbar">
-      <input type="text" id="libSearch" placeholder="搜索句子或含义…">
-      <button class="btn primary" id="libAddBtn">+ 添加句子</button>
-      <button class="btn ghost" id="libImportBtn">导入文本</button>
+      <input type="text" id="libSearch" placeholder="Search sentences or glosses...">
+      <button class="btn primary" id="libAddBtn">+ Add sentence</button>
+      <button class="btn ghost" id="libImportBtn">Import text</button>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
       <table class="lib">
         <colgroup><col class="c-lang"><col class="c-jp"><col class="c-en"><col class="c-act"><col class="c-prog"></colgroup>
-        <thead><tr><th>语言</th><th>句子 · 原文</th><th>英语含义</th><th>试听</th><th>掌握度</th></tr></thead>
+        <thead><tr><th>Language</th><th>Sentence</th><th>English gloss</th><th>Listen</th><th>Mastery</th></tr></thead>
         <tbody id="libBody"></tbody>
       </table>
-      <div class="empty" id="libEmpty" style="display:none">还没有句子。点击「添加句子」开始积累你的口语库。</div>
+      <div class="empty" id="libEmpty" style="display:none">No sentences yet. Click "Add sentence" to start building your speaking library.</div>
     </div>
     <div class="set-group" style="margin-top:22px;max-width:640px">
-      <div class="section-head"><h2>批量导入</h2><p>用文本批量加入句子，一行一句</p></div>
+      <div class="section-head"><h2>Batch import</h2><p>Paste sentences, one per line</p></div>
       <div class="card" id="importBox" style="display:none">
-        <textarea id="importArea" rows="6" style="width:100%;border:1px solid var(--line-strong);border-radius:12px;padding:12px;font-size:13.5px;resize:vertical" placeholder="英语句 :: 含义&#10;日本語 :: 英語含义 :: 罗马音"></textarea>
+        <textarea id="importArea" rows="6" style="width:100%;border:1px solid var(--line-strong);border-radius:12px;padding:12px;font-size:13.5px;resize:vertical" placeholder="English sentence :: English gloss&#10;Japanese :: English gloss :: romaji"></textarea>
         <div style="display:flex;gap:10px;margin-top:10px;justify-content:flex-end">
-          <button class="btn ghost" id="importCancel">取消</button>
-          <button class="btn primary" id="importOk">导入</button>
+          <button class="btn ghost" id="importCancel">Cancel</button>
+          <button class="btn primary" id="importOk">Import</button>
         </div>
       </div>
     </div>
@@ -40,7 +40,8 @@ export function renderLibrary(host: HTMLElement): void {
   const draw = (): void => {
     const q = search.value.toLowerCase();
     const list = getState().sentences.filter((s) => {
-      const hay = `${s.lang === 'en' ? (s as { en: string }).en : (s as { jp: string }).jp} ${(s as { romaji?: string }).romaji ?? ''} ${s.meaning}`;
+      const head = s.lang === 'en' ? (s as { en: string }).en : (s as { jp: string }).jp;
+      const hay = `${head} ${(s as { romaji?: string }).romaji ?? ''} ${s.gloss}`;
       return !q || hay.toLowerCase().includes(q);
     });
     empty.style.display = list.length ? 'none' : 'block';
@@ -50,11 +51,11 @@ export function renderLibrary(host: HTMLElement): void {
         const head = s.lang === 'en' ? (s as { en: string }).en : (s as { jp: string }).jp;
         const rom = (s as { romaji?: string }).romaji;
         return `<tr>
-          <td>${s.lang === 'en' ? '<span class="pill-tag en">EN</span>' : '<span class="pill-tag ja">日</span>'}</td>
+          <td>${s.lang === 'en' ? '<span class="pill-tag en">EN</span>' : '<span class="pill-tag ja">JA</span>'}</td>
           <td>${head}${rom ? `<div style="color:var(--muted);font-size:12px">${rom}</div>` : ''}</td>
-          <td>${s.meaning || '—'}</td>
+          <td>${s.gloss || '—'}</td>
           <td style="white-space:nowrap"><button class="ico-btn speak" data-id="${s.id}">▶</button><button class="ico-btn" data-del="${s.id}">✕</button></td>
-          <td><div class="mini-prog"><i style="width:${Math.min(100, n * 20)}%"></i></div><div style="font-size:11px;color:var(--muted);margin-top:3px">${n} 次</div></div></td>
+          <td><div class="mini-prog"><i style="width:${Math.min(100, n * 20)}%"></i></div><div style="font-size:11px;color:var(--muted);margin-top:3px">${n}×</div></td>
         </tr>`;
       })
       .join('');
@@ -73,11 +74,11 @@ export function renderLibrary(host: HTMLElement): void {
   host.querySelector('#importOk')!.addEventListener('click', () => {
     const area = host.querySelector('#importArea') as HTMLTextAreaElement;
     const added = parseImport(area.value);
-    if (!added.length) return toast('没有可导入的内容');
+    if (!added.length) return toast('Nothing to import');
     setState({ ...getState(), sentences: [...getState().sentences, ...added] });
     area.value = '';
     importBox.style.display = 'none';
-    toast(`已加入 ${added.length} 句`);
+    toast(`Added ${added.length} sentence${added.length > 1 ? 's' : ''}`);
     draw();
   });
 
@@ -90,7 +91,7 @@ export function renderLibrary(host: HTMLElement): void {
     } else if (btn.hasAttribute('data-del')) {
       const id = btn.dataset.del!;
       const s = getState().sentences.find((x) => x.id === id);
-      if (s && confirm('删除这句？\n' + (s.lang === 'en' ? (s as { en: string }).en : (s as { jp: string }).jp))) {
+      if (s && confirm('Delete this sentence?\n' + (s.lang === 'en' ? (s as { en: string }).en : (s as { jp: string }).jp))) {
         setState({
           ...getState(),
           sentences: getState().sentences.filter((x) => x.id !== id),
@@ -113,9 +114,9 @@ function parseImport(text: string): Sentence[] {
       const p = line.split('::').map((x) => x.trim());
       if (!p[0]) return;
       if (/[\u3040-\u30ff]/.test(p[0])) {
-        added.push({ id: uid(), lang: 'ja', cat: 2, jp: p[0], meaning: p[1] || '', romaji: p[2] || '' });
+        added.push({ id: uid(), lang: 'ja', cat: 3, jp: p[0], gloss: p[1] || '', romaji: p[2] || '' });
       } else {
-        added.push({ id: uid(), lang: 'en', cat: 3, en: p[0], meaning: p[1] || '', ipaUs: '', ipaUk: '' });
+        added.push({ id: uid(), lang: 'en', cat: 3, en: p[0], gloss: p[1] || '', ipaUs: '', ipaUk: '' });
       }
     });
   return added;

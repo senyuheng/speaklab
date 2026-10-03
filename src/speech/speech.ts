@@ -1,5 +1,4 @@
-// 服务层：语音引擎（TTS 音色锁定 / 录音 / 近似评分识别）
-// 对外只暴露接口一致的函数；未来可替换为 AI 后端实现，视图层不感知
+// Service: speech engine (locked TTS voices / recording / approximate scoring)
 import type { Lang, Accent } from '../content/content';
 import { voiceLang } from '../state/settings';
 import { similarity } from '../lib/similarity';
@@ -9,7 +8,7 @@ export interface SpeechResult {
   recognized: string;
 }
 
-// ---- TTS：按当前口音锁定音色，英美不混 ----
+// TTS: pick the voice matching the locked accent (US/UK never mixed)
 function pickVoice(lang: Lang, accent: Accent): SpeechSynthesisVoice | null {
   if (!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices();
@@ -41,7 +40,7 @@ export function primeVoices(): void {
   window.speechSynthesis.getVoices();
 }
 
-// ---- 录音 + 近似评分 ----
+// Recording + approximate scoring
 export class RecordingController {
   private stream: MediaStream | null = null;
   private recorder: MediaRecorder | null = null;

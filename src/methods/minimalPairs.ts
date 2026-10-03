@@ -1,4 +1,4 @@
-// 方法：最小对立对（补影子跟读治不了的单音）。先练听辨（达 90% 再发声），再练发声对比
+// Method: Minimal pairs (fixes single sounds shadowing can't). Discriminate first, then produce.
 import { getState } from '../state/store';
 import { speak, RecordingController } from '../speech/speech';
 import type { MinimalPair } from '../content/content';
@@ -6,7 +6,7 @@ import type { PracticeController } from './types';
 
 export class MinimalPairs implements PracticeController {
   readonly id = 'minimalPairs';
-  readonly label = '最小对立对';
+  readonly label = 'Minimal Pairs';
   readonly lang = 'en' as const;
   private host!: HTMLElement;
   private pairs: MinimalPair[] = [];
@@ -19,7 +19,7 @@ export class MinimalPairs implements PracticeController {
   mount(host: HTMLElement): void {
     this.host = host;
     const st = getState();
-    this.pairs = st.minimalPairs.filter((p) => p.lang === 'en');
+    this.pairs = st.minimalPairs;
     this.render();
   }
 
@@ -40,17 +40,17 @@ export class MinimalPairs implements PracticeController {
           <div class="mp-word" data-role="word">—</div>
           <div class="mp-ipa" data-role="ipa"></div>
           <div class="controls">
-            <button class="ctrl-btn speak" data-act="play">🔊 播放（猜是哪个）</button>
-            <button class="ctrl-btn" data-act="chooseA" data-val="A">选 A</button>
-            <button class="ctrl-btn" data-act="chooseB" data-val="B">选 B</button>
+            <button class="ctrl-btn speak" data-act="play">Play (guess which one)</button>
+            <button class="ctrl-btn" data-act="chooseA" data-val="A">A</button>
+            <button class="ctrl-btn" data-act="chooseB" data-val="B">B</button>
           </div>
           <div class="score-box on" data-role="feedback" style="margin-top:14px"></div>
           <div class="mp-feedback" data-role="accuracy"></div>
           <div style="margin-top:16px;border-top:1px dashed var(--line-strong);padding-top:14px">
-            <div style="font-weight:600;font-size:14px;margin-bottom:8px">发声练习：把两个词都读出来对比</div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px">Produce: say both words out loud and compare</div>
             <div class="controls">
-              <button class="ctrl-btn" data-act="rec">🎙 录音对比</button>
-              <button class="ctrl-btn" data-act="playRec" disabled>▶ 播放我的</button>
+              <button class="ctrl-btn" data-act="rec">Record</button>
+              <button class="ctrl-btn" data-act="playRec" disabled>Play mine</button>
             </div>
           </div>
         </div>
@@ -85,8 +85,8 @@ export class MinimalPairs implements PracticeController {
     const p = this.current();
     if (!p) return;
     this.host.querySelector('[data-role="pairNote"]')!.textContent = p.note;
-    this.host.querySelector('[data-role="ipa"]')!.textContent = `${p.a} ${p.ipaA}  ·  ${p.b} ${p.ipaB}`;
-    this.host.querySelector('[data-role="word"]')!.textContent = '？';
+    this.host.querySelector('[data-role="ipa"]')!.textContent = `${p.a} / ${p.b}  ${p.ipa}`;
+    this.host.querySelector('[data-role="word"]')!.textContent = '?';
     this.host.querySelector('[data-role="feedback"]')!.innerHTML = '';
     this.renderAccuracy();
   }
@@ -96,10 +96,10 @@ export class MinimalPairs implements PracticeController {
     if (!p) return;
     const pick = Math.random() < 0.5 ? p.a : p.b;
     this.host.dataset.pick = pick;
-    this.host.querySelector('[data-role="word"]')!.textContent = '🔊 听…';
+    this.host.querySelector('[data-role="word"]')!.textContent = 'Listening...';
     const st = getState();
     speak(pick, 'en', st.settings.accent, 0.7, () => {
-      this.host.querySelector('[data-role="word"]')!.textContent = '请选择你听到的词';
+      this.host.querySelector('[data-role="word"]')!.textContent = 'Which word did you hear?';
     });
   }
 
@@ -107,14 +107,14 @@ export class MinimalPairs implements PracticeController {
     const p = this.current();
     const pick = this.host.dataset.pick;
     if (!pick) {
-      this.feedback('先点「播放」再选');
+      this.feedback('Press "Play" first, then choose.');
       return;
     }
     this.trials++;
     const heard = v === 'A' ? p.a : p.b;
     const correct = heard === pick;
     if (correct) this.correct++;
-    this.feedback(correct ? `✓ 对（${pick}）` : `✗ 错：你听到的是 ${pick}，不是 ${heard}`);
+    this.feedback(correct ? `Correct (${pick}).` : `Wrong: you heard ${pick}, not ${heard}.`);
     this.renderAccuracy();
     delete this.host.dataset.pick;
   }
@@ -131,14 +131,14 @@ export class MinimalPairs implements PracticeController {
       return;
     }
     const acc = Math.round((this.correct / this.trials) * 100);
-    const pass = acc >= 90 ? '· 已达 90%，可进入发声' : '';
-    box.innerHTML = `<div class="mp-acc">听辨正确率：${this.correct}/${this.trials} = ${acc}% ${pass}</div>`;
+    const pass = acc >= 90 ? 'Reached 90% — move on to production.' : '';
+    box.innerHTML = `<div class="mp-acc">Discrimination: ${this.correct}/${this.trials} = ${acc}% ${pass}</div>`;
   }
 
   private async toggleRec(btn: HTMLElement): Promise<void> {
     const st = getState();
     if (this.rec.recording) {
-      btn.textContent = '🎙 录音对比';
+      btn.textContent = 'Record';
       btn.classList.remove('recording');
       this.rec.stop((r) => {
         if (this.blobUrl) URL.revokeObjectURL(this.blobUrl);
@@ -149,10 +149,10 @@ export class MinimalPairs implements PracticeController {
     }
     try {
       await this.rec.start('en', st.settings.accent, false);
-      btn.textContent = '⏹ 停止';
+      btn.textContent = 'Stop';
       btn.classList.add('recording');
     } catch (err) {
-      alert('无法使用麦克风：' + ((err as Error).message || '请检查权限'));
+      alert('Microphone unavailable: ' + ((err as Error).message || 'check permissions'));
     }
   }
 

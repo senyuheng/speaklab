@@ -1,102 +1,114 @@
-// 内容层：句库 / 假名 / 最小对立对 的种子数据与类型
-// 独立成模块，便于版本化、导入更新，UI 与逻辑不写死数据
-
-export type Lang = 'en' | 'ja';
 export type Accent = 'US' | 'UK';
+export type Lang = 'en' | 'ja';
 
-export interface EnSentence {
+interface SentenceBase {
   id: string;
-  lang: 'en';
   cat: number;
+  gloss: string;
+}
+export interface EnSentence extends SentenceBase {
+  lang: 'en';
   en: string;
   ipaUs: string;
   ipaUk: string;
-  meaning: string;
 }
-
-export interface JaSentence {
-  id: string;
+export interface JaSentence extends SentenceBase {
   lang: 'ja';
-  cat: number;
   jp: string;
   romaji: string;
-  meaning: string;
 }
-
 export type Sentence = EnSentence | JaSentence;
 
 export interface MinimalPair {
-  id: string;
-  lang: Lang;
   a: string;
   b: string;
-  ipaA: string;
-  ipaB: string;
+  ipa: string;
   note: string;
 }
 
-export const EN_CATS = [
-  'Self Introduction',
-  'Ordering Food',
-  'Daily Small Talk',
-  'Opinions & Feelings',
-];
-export const JA_CATS = ['Greetings', 'Introductions', 'Daily Phrases'];
+export type KanaSet = 'hiragana' | 'katakana';
+export type KanaChar = [string, string, string];
 
-export const catName = (lang: Lang, ci: number): string =>
-  lang === 'en' ? EN_CATS[ci] ?? '' : JA_CATS[ci] ?? '';
+export const EN_CATS = ['Self Introduction', 'Ordering Food', 'Daily Small Talk', 'Opinions & Feelings'];
+export const JA_CATS = ['Self Introduction', 'At a Café', 'Study & Work', 'Daily Life'];
+
+export const catName = (lang: Lang, cat: number): string =>
+  lang === 'en' ? EN_CATS[cat] ?? '' : JA_CATS[cat] ?? '';
+
+let n = 0;
+const id = (): string => `s${++n}`;
 
 export const SEED_EN: EnSentence[] = [
-  { id: 'e1', lang: 'en', cat: 0, en: "Hi, I'm Alex. I'm a student studying computer science.", ipaUs: "/haɪ aɪm ˈælɪks aɪm ə ˈstuːdənt ˈstʌdiɪŋ kəmˈpjuːtər ˈsaɪəns/", ipaUk: "/haɪ aɪm ˈælɪks aɪm ə ˈstjuːdənt ˈstʌdiɪŋ kəmˈpjuːtə ˈsaɪəns/", meaning: '嗨，我是 Alex，我在学计算机科学。' },
-  { id: 'e2', lang: 'en', cat: 0, en: "I'm from Shanghai, but I live in Beijing now.", ipaUs: "/aɪm frəm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/", ipaUk: "/aɪm frɒm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/", meaning: '我来自上海，但现在住在北京。' },
-  { id: 'e3', lang: 'en', cat: 0, en: 'Nice to meet you.', ipaUs: '/naɪs tə miːt juː/', ipaUk: '/naɪs tə miːt juː/', meaning: '很高兴认识你。' },
-  { id: 'e4', lang: 'en', cat: 0, en: "I'm learning Japanese because I love anime.", ipaUs: "/aɪm ˈlɜːrnɪŋ ˌdʒæpəˈniːz bɪˈkɔːz aɪ lʌv ˈænəmeɪ/", ipaUk: "/aɪm ˈlɜːnɪŋ ˌdʒæpəˈniːz bɪˈkɒz aɪ lʌv ˈænəmeɪ/", meaning: '我在学日语，因为我喜欢动漫。' },
-  { id: 'e5', lang: 'en', cat: 0, en: 'My hobbies include reading and badminton.', ipaUs: "/maɪ ˈhɑːbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/", ipaUk: "/maɪ ˈhɒbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/", meaning: '我的爱好包括阅读和羽毛球。' },
-  { id: 'e6', lang: 'en', cat: 1, en: "I'd like a glass of water, please.", ipaUs: "/aɪd laɪk ə ɡlæs əv ˈwɔːtər pliːz/", ipaUk: "/aɪd laɪk ə ɡlɑːs əv ˈwɔːtə pliːz/", meaning: '请给我一杯水。' },
-  { id: 'e7', lang: 'en', cat: 1, en: 'Could I have the menu, please?', ipaUs: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', ipaUk: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', meaning: '可以给我看下菜单吗？' },
-  { id: 'e8', lang: 'en', cat: 1, en: 'Is this dish spicy?', ipaUs: '/ɪz ðɪs dɪʃ ˈspaɪsi/', ipaUk: '/ɪz ðɪs dɪʃ ˈspaɪsi/', meaning: '这道菜辣吗？' },
-  { id: 'e9', lang: 'en', cat: 1, en: "I'm allergic to peanuts.", ipaUs: "/aɪm əˈlɜːrdʒɪk tə ˈpiːnʌts/", ipaUk: "/aɪm əˈlɜːdʒɪk tə ˈpiːnʌts/", meaning: '我对花生过敏。' },
-  { id: 'e10', lang: 'en', cat: 1, en: 'Can we get the bill, please?', ipaUs: '/kæn wi ɡet ðə bɪl pliːz/', ipaUk: '/kæn wi ɡet ðə bɪl pliːz/', meaning: '可以结账吗？' },
-  { id: 'e11', lang: 'en', cat: 2, en: "How's it going today?", ipaUs: '/haʊz ɪt ˈɡoʊɪŋ təˈdeɪ/', ipaUk: '/haʊz ɪt ˈɡəʊɪŋ təˈdeɪ/', meaning: '今天过得怎么样？' },
-  { id: 'e12', lang: 'en', cat: 2, en: "It's been a busy week for me.", ipaUs: '/ɪts bɪn ə ˈbɪzi wiːk fər miː/', ipaUk: '/ɪts biːn ə ˈbɪzi wiːk fə miː/', meaning: '我这周很忙。' },
-  { id: 'e13', lang: 'en', cat: 2, en: 'What do you usually do on weekends?', ipaUs: '/wʌt duː juː ˈjuːʒuəli duː ɑːn ˌwiːkˈendz/', ipaUk: '/wɒt duː juː ˈjuːʒuəli duː ɒn ˌwiːkˈendz/', meaning: '你周末通常做什么？' },
-  { id: 'e14', lang: 'en', cat: 2, en: "I'm really into photography.", ipaUs: "/aɪm ˈrɪəli ˈɪntuː fəˈtɑːɡrəfi/", ipaUk: "/aɪm ˈrɪəli ˈɪntuː fəˈtɒɡrəfi/", meaning: '我很喜欢摄影。' },
-  { id: 'e15', lang: 'en', cat: 2, en: "Let's grab coffee sometime.", ipaUs: '/lets ɡræb ˈkɔːfi ˈsʌmtaɪm/', ipaUk: '/lets ɡræb ˈkɒfi ˈsʌmtaɪm/', meaning: '改天一起喝杯咖啡吧。' },
-  { id: 'e16', lang: 'en', cat: 3, en: "I think it's a great idea.", ipaUs: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdiːə/', ipaUk: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdɪə/', meaning: '我觉得这是个好主意。' },
-  { id: 'e17', lang: 'en', cat: 3, en: 'In my opinion, practice makes perfect.', ipaUs: '/ɪn maɪ əˈpɪnjən ˈpræktɪs meɪks ˈpɜːrfɪkt/', ipaUk: '/ɪn maɪ əˈpɪnjən ˈpræktɪs meɪks ˈpɜːfɪkt/', meaning: '依我看，熟能生巧。' },
-  { id: 'e18', lang: 'en', cat: 3, en: 'I feel a bit nervous about the interview.', ipaUs: '/aɪ fiːl ə bɪt ˈnɜːrvəs əˈbaʊt ði ˈɪntərvjuː/', ipaUk: '/aɪ fiːl ə bɪt ˈnɜːvəs əˈbaʊt ði ˈɪntəvjuː/', meaning: '我对面试有点紧张。' },
-  { id: 'e19', lang: 'en', cat: 3, en: 'That sounds reasonable to me.', ipaUs: '/ðæt saʊndz ˈriːzənəbəl tə miː/', ipaUk: '/ðæt saʊndz ˈriːzənəbəl tə miː/', meaning: '我觉得这听起来很合理。' },
-  { id: 'e20', lang: 'en', cat: 3, en: 'I completely agree with you.', ipaUs: '/aɪ kəmˈpliːtli əˈɡriː wɪð juː/', ipaUk: '/aɪ kəmˈpliːtli əˈɡriː wɪð juː/', meaning: '我完全同意你。' },
+  { id: id(), lang: 'en', cat: 0, en: "Hi, I'm Alex. I'm a student studying computer science.", ipaUs: '/haɪ aɪm ˈælɪks aɪm ə ˈstuːdənt ˈstʌdiɪŋ kəmˈpjuːtər ˈsaɪəns/', ipaUk: '/haɪ aɪm ˈælɪks aɪm ə ˈstjuːdənt ˈstʌdiɪŋ kəmˈpjuːtə ˈsaɪəns/', gloss: 'A natural way to introduce yourself and say what you do.' },
+  { id: id(), lang: 'en', cat: 0, en: "I'm from Shanghai, but I live in Beijing now.", ipaUs: '/aɪm frəm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/', ipaUk: '/aɪm frɒm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/', gloss: "Talking about where you are from and where you live now." },
+  { id: id(), lang: 'en', cat: 0, en: 'Nice to meet you.', ipaUs: '/naɪs tə miːt juː/', ipaUk: '/naɪs tə miːt juː/', gloss: 'A polite greeting used when you meet someone for the first time.' },
+  { id: id(), lang: 'en', cat: 0, en: "I'm learning Japanese because I love anime.", ipaUs: '/aɪm ˈlɜːrnɪŋ ˌdʒæpəˈniːz bɪˈkɔːz aɪ lʌv ˈænəmeɪ/', ipaUk: '/aɪm ˈlɜːnɪŋ ˌdʒæpəˈniːz bɪˈkɒz aɪ lʌv ˈænɪmeɪ/', gloss: 'Explaining a reason for studying a language.' },
+  { id: id(), lang: 'en', cat: 0, en: 'My hobbies include reading and badminton.', ipaUs: '/maɪ ˈhɑːbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/', ipaUk: '/maɪ ˈhɒbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/', gloss: "Listing your hobbies; 'include' means some of the things you enjoy." },
+
+  { id: id(), lang: 'en', cat: 1, en: "I'd like a glass of water, please.", ipaUs: '/aɪd laɪk ə ɡlæs əv ˈwɔːtər pliːz/', ipaUk: '/aɪd laɪk ə ɡlɑːs əv ˈwɔːtə pliːz/', gloss: "A polite way to order a drink; 'I'd like' = 'I want'." },
+  { id: id(), lang: 'en', cat: 1, en: 'Could I have the menu, please?', ipaUs: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', ipaUk: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', gloss: 'A polite request to see the menu.' },
+  { id: id(), lang: 'en', cat: 1, en: 'Is this dish spicy?', ipaUs: '/ɪz ðɪs dɪʃ ˈspaɪsi/', ipaUk: '/ɪz ðɪs dɪʃ ˈspaɪsi/', gloss: 'Asking how hot or strong the food is.' },
+  { id: id(), lang: 'en', cat: 1, en: "I'm allergic to peanuts.", ipaUs: '/aɪm əˈlɜːrdʒɪk tə ˈpiːnʌts/', ipaUk: '/aɪm əˈlɜːdʒɪk tə ˈpiːnʌts/', gloss: 'An important phrase to tell staff about a food allergy.' },
+  { id: id(), lang: 'en', cat: 1, en: 'Can we get the bill, please?', ipaUs: '/kæn wi ɡet ðə bɪl pliːz/', ipaUk: '/kæn wi ɡet ðə bɪl pliːz/', gloss: 'A polite way to ask for the check at the end of a meal.' },
+
+  { id: id(), lang: 'en', cat: 2, en: "How's it going today?", ipaUs: '/haʊz ɪt ˈɡoʊɪŋ təˈdeɪ/', ipaUk: '/haʊz ɪt ˈɡəʊɪŋ təˈdeɪ/', gloss: 'An informal greeting asking how someone is.' },
+  { id: id(), lang: 'en', cat: 2, en: "It's been a busy week for me.", ipaUs: '/ɪts bɪn ə ˈbɪzi wiːk fər miː/', ipaUk: '/ɪts bɪn ə ˈbɪzi wiːk fə miː/', gloss: 'Saying your week has been full of activity.' },
+  { id: id(), lang: 'en', cat: 2, en: 'What do you usually do on weekends?', ipaUs: '/wʌt də ju ˈjuːʒuəli duː ɑːn ˈwiːkendz/', ipaUk: '/wɒt də ju ˈjuːʒuəli duː ɒn ˈwiːkendz/', gloss: 'Asking about someone\u2019s weekend routine.' },
+  { id: id(), lang: 'en', cat: 2, en: "I'm really into photography.", ipaUs: '/aɪm ˈriːəli ˈɪntuː fəˈtɑːɡrəfi/', ipaUk: '/aɪm ˈrɪəli ˈɪntuː fəˈtɒɡrəfi/', gloss: "Informally, 'into' means strongly interested in." },
+  { id: id(), lang: 'en', cat: 2, en: "Let's grab coffee sometime.", ipaUs: '/lets ɡræb ˈkɔːfi ˈsʌmtaɪm/', ipaUk: '/lets ɡræb ˈkɒfi ˈsʌmtaɪm/', gloss: 'A friendly, casual invitation to meet up.' },
+
+  { id: id(), lang: 'en', cat: 3, en: "I think it's a great idea.", ipaUs: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdiːə/', ipaUk: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdɪə/', gloss: 'Giving a positive opinion.' },
+  { id: id(), lang: 'en', cat: 3, en: 'In my opinion, the plan needs more work.', ipaUs: '/ɪn maɪ əˈpɪnjən ðə plæn niːdz mɔːr wɜːrk/', ipaUk: '/ɪn maɪ əˈpɪnjən ðə plæn niːdz mɔː wɜːk/', gloss: 'Introducing a critical opinion politely.' },
+  { id: id(), lang: 'en', cat: 3, en: "To be honest, I'm a bit worried about it.", ipaUs: '/tə bi ˈɑːnɪst aɪm ə bɪt ˈwɜːrid əˈbaʊt ɪt/', ipaUk: '/tə bi ˈɒnɪst aɪm ə bɪt ˈwʌrid əˈbaʊt ɪt/', gloss: 'Expressing concern in a sincere way.' },
+  { id: id(), lang: 'en', cat: 3, en: "That's a fair point, but I see it differently.", ipaUs: '/ðæts ə fer pɔɪnt bət aɪ siː ɪt ˈdɪfrəntli/', ipaUk: '/ðæts ə feə pɔɪnt bət aɪ siː ɪt ˈdɪfrəntli/', gloss: 'A polite way to disagree with someone.' },
+  { id: id(), lang: 'en', cat: 3, en: "I'd rather not talk about it right now.", ipaUs: '/aɪd ˈræðər nɑːt tɔːk əˈbaʊt ɪt raɪt naʊ/', ipaUk: '/aɪd ˈrɑːðə nɒt tɔːk əˈbaʊt ɪt raɪt naʊ/', gloss: "Polite refusal; 'I'd rather not' = I prefer not to." },
 ];
 
-// 日语按 N2 水平编排（非入门）：保留高频日常句 + 可支撑中高级对话
 export const SEED_JA: JaSentence[] = [
-  { id: 'j1', lang: 'ja', cat: 0, jp: 'おはようございます', romaji: 'Ohayō gozaimasu', meaning: 'Good morning. (formal) 早上好（敬语）' },
-  { id: 'j2', lang: 'ja', cat: 0, jp: 'こんにちは', romaji: 'Konnichiwa', meaning: 'Hello / Good afternoon. 你好 / 下午好' },
-  { id: 'j3', lang: 'ja', cat: 0, jp: 'ありがとうございます', romaji: 'Arigatō gozaimasu', meaning: 'Thank you. (formal) 谢谢（敬语）' },
-  { id: 'j4', lang: 'ja', cat: 0, jp: 'さようなら', romaji: 'Sayōnara', meaning: 'Goodbye. 再见' },
-  { id: 'j5', lang: 'ja', cat: 1, jp: '私は学生です', romaji: 'Watashi wa gakusei desu', meaning: 'I am a student. 我是学生' },
-  { id: 'j6', lang: 'ja', cat: 1, jp: '私の名前はアレックスです', romaji: 'Watashi no namae wa Arekkusu desu', meaning: 'My name is Alex. 我叫 Alex' },
-  { id: 'j7', lang: 'ja', cat: 1, jp: '日本語を勉強しています', romaji: 'Nihongo o benkyō shite imasu', meaning: 'I am studying Japanese. 我在学日语' },
-  { id: 'j8', lang: 'ja', cat: 2, jp: 'すみません', romaji: 'Sumimasen', meaning: 'Excuse me / Sorry. 不好意思 / 请问' },
-  { id: 'j9', lang: 'ja', cat: 2, jp: 'はい、分かりました', romaji: 'Hai, wakarimashita', meaning: 'Yes, I understand. 好的，明白了' },
-  { id: 'j10', lang: 'ja', cat: 2, jp: 'もう一度お願いします', romaji: 'Mō ichido onegaishimasu', meaning: 'One more time, please. 请再说一遍' },
+  { id: id(), lang: 'ja', cat: 0, jp: 'こんにちは、はじめまして。', romaji: "Kon'nichiwa, hajimemashite.", gloss: 'Hello, it\u2019s nice to meet you \u2014 used when meeting someone for the first time.' },
+  { id: id(), lang: 'ja', cat: 2, jp: '私は大学生で、コンピューター科学を勉強しています。', romaji: 'Watashi wa daigakusei de, konpyūtā kagaku o benkyō shite imasu.', gloss: "I'm a university student studying computer science." },
+  { id: id(), lang: 'ja', cat: 3, jp: '今日はとても疲れました。', romaji: 'Kyō wa totemo tsukaremashita.', gloss: "I'm very tired today." },
+  { id: id(), lang: 'ja', cat: 1, jp: 'お茶でもいかがですか。', romaji: 'Ocha demo ikaga desu ka.', gloss: 'A polite way to offer someone tea or something to drink.' },
+  { id: id(), lang: 'ja', cat: 0, jp: '私は中国の上海から来ました。', romaji: 'Watashi wa Chūgoku no Shanhai kara kimashita.', gloss: 'I came from Shanghai, China.' },
+  { id: id(), lang: 'ja', cat: 3, jp: 'この本は読み終えました。', romaji: 'Kono hon wa yomi oemashita.', gloss: "I've finished reading this book." },
+  { id: id(), lang: 'ja', cat: 3, jp: '明日の予定はまだ決まっていません。', romaji: 'Ashita no yotei wa mada kimatte imasen.', gloss: "My plans for tomorrow aren't decided yet." },
+  { id: id(), lang: 'ja', cat: 3, jp: '友達と一緒に映画を見に行くつもりです。', romaji: 'Tomodachi to issho ni eiga o mi ni iku tsumori desu.', gloss: 'I plan to go watch a movie with my friend.' },
+  { id: id(), lang: 'ja', cat: 1, jp: 'この店はいつも込んでいますね。', romaji: 'Kono mise wa itsumo konde imasu ne.', gloss: "This place is always crowded, isn't it?" },
+  { id: id(), lang: 'ja', cat: 3, jp: 'ゆっくり話していただけますか。', romaji: 'Yukkuri hanashite itadakemasu ka.', gloss: 'Could you speak more slowly, please?' },
 ];
 
-// 最小对立对：先做英语（补影子跟读治不了的单音），日语预留（r/l、促音等）
 export const SEED_MINIMAL_PAIRS: MinimalPair[] = [
-  { id: 'mp1', lang: 'en', a: 'ship', b: 'sheep', ipaA: '/ʃɪp/', ipaB: '/ʃiːp/', note: '短音 ɪ / 长音 iː' },
-  { id: 'mp2', lang: 'en', a: 'bit', b: 'beat', ipaA: '/bɪt/', ipaB: '/biːt/', note: '短音 ɪ / 长音 iː' },
-  { id: 'mp3', lang: 'en', a: 'right', b: 'light', ipaA: '/raɪt/', ipaB: '/laɪt/', note: 'r / l（中国学习者易混）' },
-  { id: 'mp4', lang: 'en', a: 'bed', b: 'bad', ipaA: '/bed/', ipaB: '/bæd/', note: 'e / æ' },
-  { id: 'mp5', lang: 'en', a: 'think', b: 'sink', ipaA: '/θɪŋk/', ipaB: '/sɪŋk/', note: 'θ / s' },
-  { id: 'mp6', lang: 'en', a: 'full', b: 'fool', ipaA: '/fʊl/', ipaB: '/fuːl/', note: 'ʊ / uː' },
+  { a: 'ship', b: 'sheep', ipa: '/ɪ/ vs /iː/', note: 'A boat vs an animal. Short and long "i".' },
+  { a: 'live', b: 'leave', ipa: '/ɪ/ vs /iː/', note: 'To exist somewhere vs to go away. Vowel length changes the meaning.' },
+  { a: 'bit', b: 'beat', ipa: '/ɪ/ vs /iː/', note: 'A small amount vs to strike / a rhythm.' },
+  { a: 'bed', b: 'bad', ipa: '/e/ vs /æ/', note: 'Furniture vs "not good". One vowel moves the meaning.' },
+  { a: 'man', b: 'men', ipa: '/æ/ vs /e/', note: 'One male vs several males.' },
+  { a: 'think', b: 'sink', ipa: '/θ/ vs /s/', note: 'The "th" sound is made with the tongue between the teeth.' },
 ];
 
-export type KanaSet = 'hiragana' | 'katakana';
-
-// [字符, 罗马音, 英语发音提示]
-export const KANA: Record<KanaSet, [string, string, string][]> = {
-  hiragana: [['あ','a','ah'],['い','i','ee'],['う','u','oo'],['え','e','eh'],['お','o','oh'],['か','ka','kah'],['き','ki','kee'],['く','ku','koo'],['け','ke','keh'],['こ','ko','koh'],['さ','sa','sah'],['し','shi','shee'],['す','su','soo'],['せ','se','seh'],['そ','so','soh'],['た','ta','tah'],['ち','chi','chee'],['つ','tsu','tsoo'],['て','te','teh'],['と','to','toh'],['な','na','nah'],['に','ni','nee'],['ぬ','nu','noo'],['ね','ne','neh'],['の','no','noh'],['は','ha','hah'],['ひ','hi','hee'],['ふ','fu','foo'],['へ','he','heh'],['ほ','ho','hoh'],['ま','ma','mah'],['み','mi','mee'],['む','mu','moo'],['め','me','meh'],['も','mo','moh'],['や','ya','yah'],['ゆ','yu','yoo'],['よ','yo','yoh'],['ら','ra','rah'],['り','ri','ree'],['る','ru','roo'],['れ','re','reh'],['ろ','ro','roh'],['わ','wa','wah'],['を','wo','woh'],['ん','n','nn']],
-  katakana: [['ア','a','ah'],['イ','i','ee'],['ウ','u','oo'],['エ','e','eh'],['オ','o','oh'],['カ','ka','kah'],['キ','ki','kee'],['ク','ku','koo'],['ケ','ke','keh'],['コ','ko','koh'],['サ','sa','sah'],['シ','shi','shee'],['ス','su','soo'],['セ','se','seh'],['ソ','so','soh'],['タ','ta','tah'],['チ','chi','chee'],['ツ','tsu','tsoo'],['テ','te','teh'],['ト','to','toh'],['ナ','na','nah'],['ニ','ni','nee'],['ヌ','nu','noo'],['ネ','ne','neh'],['ノ','no','noh'],['ハ','ha','hah'],['ヒ','hi','hee'],['フ','fu','foo'],['ヘ','he','heh'],['ホ','ho','hoh'],['マ','ma','mah'],['ミ','mi','mee'],['ム','mu','moo'],['メ','me','meh'],['モ','mo','moh'],['ヤ','ya','yah'],['ユ','yu','yoo'],['ヨ','yo','yoh'],['ラ','ra','rah'],['リ','ri','ree'],['ル','ru','roo'],['レ','re','reh'],['ロ','ro','roh'],['ワ','wa','wah'],['ヲ','wo','woh'],['ン','n','nn']],
+export const KANA: Record<KanaSet, KanaChar[]> = {
+  hiragana: [
+    ['あ', 'a', 'art'], ['い', 'i', 'eel'], ['う', 'u', 'moon'], ['え', 'e', 'egg'], ['お', 'o', 'ocean'],
+    ['か', 'ka', 'car'], ['き', 'ki', 'key'], ['く', 'ku', 'cool'], ['け', 'ke', 'keg'], ['こ', 'ko', 'cone'],
+    ['さ', 'sa', 'song'], ['し', 'shi', 'she'], ['す', 'su', 'soup'], ['せ', 'se', 'say'], ['そ', 'so', 'sock'],
+    ['た', 'ta', 'top'], ['ち', 'chi', 'cheese'], ['つ', 'tsu', 'tsunami'], ['て', 'te', 'ten'], ['と', 'to', 'toe'],
+    ['な', 'na', 'nap'], ['に', 'ni', 'knee'], ['ぬ', 'nu', 'noodle'], ['ね', 'ne', 'net'], ['の', 'no', 'note'],
+    ['は', 'ha', 'hot'], ['ひ', 'hi', 'heat'], ['ふ', 'fu', 'food'], ['へ', 'he', 'help'], ['ほ', 'ho', 'hope'],
+    ['ま', 'ma', 'map'], ['み', 'mi', 'me'], ['む', 'mu', 'moon'], ['め', 'me', 'may'], ['も', 'mo', 'more'],
+    ['や', 'ya', 'yard'], ['ゆ', 'yu', 'you'], ['よ', 'yo', 'yoga'],
+    ['ら', 'ra', 'ramen'], ['り', 'ri', 'read'], ['る', 'ru', 'rude'], ['れ', 're', 'rest'], ['ろ', 'ro', 'road'],
+    ['わ', 'wa', 'water'], ['を', 'o', 'ocean'], ['ん', 'n', 'un'],
+  ],
+  katakana: [
+    ['ア', 'a', 'art'], ['イ', 'i', 'eel'], ['ウ', 'u', 'moon'], ['エ', 'e', 'egg'], ['オ', 'o', 'ocean'],
+    ['カ', 'ka', 'car'], ['キ', 'ki', 'key'], ['ク', 'ku', 'cool'], ['ケ', 'ke', 'keg'], ['コ', 'ko', 'cone'],
+    ['サ', 'sa', 'song'], ['シ', 'shi', 'she'], ['ス', 'su', 'soup'], ['セ', 'se', 'say'], ['ソ', 'so', 'sock'],
+    ['タ', 'ta', 'top'], ['チ', 'chi', 'cheese'], ['ツ', 'tsu', 'tsunami'], ['テ', 'te', 'ten'], ['ト', 'to', 'toe'],
+    ['ナ', 'na', 'nap'], ['ニ', 'ni', 'knee'], ['ヌ', 'nu', 'noodle'], ['ネ', 'ne', 'net'], ['ノ', 'no', 'note'],
+    ['ハ', 'ha', 'hot'], ['ヒ', 'hi', 'heat'], ['フ', 'fu', 'food'], ['ヘ', 'he', 'help'], ['ホ', 'ho', 'hope'],
+    ['マ', 'ma', 'map'], ['ミ', 'mi', 'me'], ['ム', 'mu', 'moon'], ['メ', 'me', 'may'], ['モ', 'mo', 'more'],
+    ['ヤ', 'ya', 'yard'], ['ユ', 'yu', 'you'], ['ヨ', 'yo', 'yoga'],
+    ['ラ', 'ra', 'ramen'], ['リ', 'ri', 'read'], ['ル', 'ru', 'rude'], ['レ', 're', 'rest'], ['ロ', 'ro', 'road'],
+    ['ワ', 'wa', 'water'], ['ヲ', 'o', 'ocean'], ['ン', 'n', 'un'],
+  ],
 };

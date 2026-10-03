@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SpeakLab · 口语训练室</title>
+  <title>SpeakLab · Speaking Studio</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f6f6b'/%3E%3Cpath d='M8 15v2h3.5l2.5 3 2.5-3H20v-2H16.5L14 12l-2.5 3H8z' fill='%23fff'/%3E%3Cpath d='M22 12v8M25 10v12' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" />
 </head>
@@ -14,22 +14,22 @@
         <svg class="brand-mark" viewBox="0 0 38 38" aria-hidden="true"><rect width="38" height="38" rx="10" fill="#1f6f6b"/><path d="M8 18v2h3.5l2.6 3.2 2.6-3.2H20v-2h-3.3L14.1 15l-2.6 3H8z" fill="#fff"/><path d="M24 15v8M27 12.5v13" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
         <div>
           <span class="brand-name">SpeakLab</span>
-          <span class="brand-sub">口語訓練室 · SPEAK FIRST</span>
+          <span class="brand-sub">SPEAK FIRST · Bilingual Speaking Studio</span>
         </div>
       </div>
       <button class="accent-pill" data-go="settings">
-        <span class="accent-dot" id="accentDot"></span>
-        <span id="accentPillLabel">美式英语 en-US</span>
-        <small>设置</small>
+        <span class="accent-dot"></span>
+        <span id="accentPillLabel">English (US)</span>
+        <small>Settings</small>
       </button>
     </header>
 
     <nav class="tabs" id="nav">
-      <button class="tab" data-view="dashboard"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>仪表盘</span></button>
-      <button class="tab" data-view="en"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12c2.5 0 3.5-5 6-5s3.5 5 6 5 3.5-5 6-5M4 12c2.5 0 3.5 5 6 5s3.5-5 6-5 3.5 5 6 5" stroke-linecap="round"/></svg><span>英语 English</span></button>
-      <button class="tab" data-view="ja"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/></svg><span>日本語</span></button>
-      <button class="tab" data-view="library"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg><span>句库</span></button>
-      <button class="tab" data-view="settings"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2l.5 2.6h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg><span>设置</span></button>
+      <button class="tab" data-view="dashboard"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Dashboard</span></button>
+      <button class="tab" data-view="en"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12c2.5 0 3.5-5 6-5s3.5 5 6 5 3.5-5 6-5M4 12c2.5 0 3.5 5 6 5s3.5-5 6-5 3.5 5 6 5" stroke-linecap="round"/></svg><span>English</span></button>
+      <button class="tab" data-view="ja"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/></svg><span>Japanese</span></button>
+      <button class="tab" data-view="library"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg><span>Library</span></button>
+      <button class="tab" data-view="settings"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2l.5 2.6h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg><span>Settings</span></button>
     </nav>
 
     <main id="main"></main>

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 
-// base './'：构建产物用相对路径，可直接部署到 GitHub Pages 子路径（/repo/）
+// base './' makes the build use relative paths, deployable under any GH Pages sub-path
 export default defineConfig({
   base: './',
   build: {

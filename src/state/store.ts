@@ -1,4 +1,3 @@
-// 领域层：应用状态唯一来源 + 本地持久化 + 连续天数 / 统计
 import type { Accent, Sentence, MinimalPair } from '../content/content';
 import { SEED_EN, SEED_JA, SEED_MINIMAL_PAIRS } from '../content/content';
 import { todayStr } from '../lib/util';
@@ -67,7 +66,7 @@ export function save(): void {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(state));
   } catch {
-    /* 存储满或隐私模式时静默失败 */
+    /* storage full or private mode */
   }
 }
 

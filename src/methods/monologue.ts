@@ -1,4 +1,4 @@
-// 方法：限时独白（Timed Monologue）——2 分钟不停顿说一个话题，练压力下的持续流利
+// Method: Timed monologue. Speak continuously on a topic for 2 minutes to build fluency under pressure.
 import type { Lang } from '../content/content';
 import { getState, recordPractice } from '../state/store';
 import { RecordingController } from '../speech/speech';
@@ -23,7 +23,7 @@ const PROMPTS: Record<Lang, string[]> = {
 
 export class TimedMonologue implements PracticeController {
   readonly id = 'monologue';
-  readonly label = '限时独白';
+  readonly label = 'Timed Monologue';
   readonly lang: Lang;
   private host!: HTMLElement;
   private sec = 120;
@@ -53,13 +53,13 @@ export class TimedMonologue implements PracticeController {
     this.host.innerHTML = `
       <div class="mono">
         <div class="lesson">
-          <div class="mp-note">话题 Topic</div>
+          <div class="mp-note">Topic</div>
           <div class="mono-topic" data-role="topic">${topic}</div>
           <div class="f432-timer" data-role="timer">02:00</div>
           <div class="controls">
-            <button class="ctrl-btn speak" data-act="start">🎙 开始（计时 + 录音）</button>
-            <button class="ctrl-btn done" data-act="stop" disabled>停止</button>
-            <button class="ctrl-btn" data-act="next">换话题</button>
+            <button class="ctrl-btn speak" data-act="start">Start (timer + recording)</button>
+            <button class="ctrl-btn done" data-act="stop" disabled>Stop</button>
+            <button class="ctrl-btn" data-act="next">New topic</button>
           </div>
           <div class="score-box on" data-role="result" style="margin-top:14px"></div>
         </div>
@@ -113,7 +113,7 @@ export class TimedMonologue implements PracticeController {
       const words = r.recognized ? r.recognized.split(/\s+/).filter(Boolean).length : 0;
       const wpm = words ? Math.round((words / elapsed) * 60) : 0;
       const box = this.host.querySelector('[data-role="result"]') as HTMLElement;
-      box.innerHTML = `<div class="score-info"><b>${elapsed}s · ${wpm ? wpm + ' 词/分' : '（未识别，以录音为准）'}</b><span>${r.recognized ? '你说：' + r.recognized : '已录音，请播放核对'}</span></div>`;
+      box.innerHTML = `<div class="score-info"><b>${elapsed}s · ${wpm ? wpm + ' wpm' : '(not recognized, trust your recording)'}</b><span>${r.recognized ? 'You said: ' + r.recognized : 'Recorded. Play it back to check.'}</span></div>`;
       this.startBtn().disabled = false;
       this.stopBtn().disabled = true;
     });
