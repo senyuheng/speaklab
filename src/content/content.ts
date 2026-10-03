@@ -29,8 +29,8 @@ export interface MinimalPair {
 export type KanaSet = 'hiragana' | 'katakana';
 export type KanaChar = [string, string, string];
 
-export const EN_CATS = ['Self Introduction', 'Ordering Food', 'Daily Small Talk', 'Opinions & Feelings'];
-export const JA_CATS = ['Self Introduction', 'At a Café', 'Study & Work', 'Daily Life'];
+export const EN_CATS = ['Self Introduction', 'Finance & Investing', 'Quant & Computer Science', 'Daily Life & Meetings'];
+export const JA_CATS = ['Self Introduction', 'Work & Meetings', 'Finance & Investing', 'Daily Life'];
 
 export const catName = (lang: Lang, cat: number): string =>
   lang === 'en' ? EN_CATS[cat] ?? '' : JA_CATS[cat] ?? '';
@@ -39,41 +39,61 @@ let n = 0;
 const id = (): string => `s${++n}`;
 
 export const SEED_EN: EnSentence[] = [
+  // Self Introduction
   { id: id(), lang: 'en', cat: 0, en: "Hi, I'm Alex. I'm a student studying computer science.", ipaUs: '/haɪ aɪm ˈælɪks aɪm ə ˈstuːdənt ˈstʌdiɪŋ kəmˈpjuːtər ˈsaɪəns/', ipaUk: '/haɪ aɪm ˈælɪks aɪm ə ˈstjuːdənt ˈstʌdiɪŋ kəmˈpjuːtə ˈsaɪəns/', gloss: 'A natural way to introduce yourself and say what you do.' },
   { id: id(), lang: 'en', cat: 0, en: "I'm from Shanghai, but I live in Beijing now.", ipaUs: '/aɪm frəm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/', ipaUk: '/aɪm frɒm ʃæŋˈhaɪ bət aɪ lɪv ɪn beɪˈdʒɪŋ naʊ/', gloss: "Talking about where you are from and where you live now." },
   { id: id(), lang: 'en', cat: 0, en: 'Nice to meet you.', ipaUs: '/naɪs tə miːt juː/', ipaUk: '/naɪs tə miːt juː/', gloss: 'A polite greeting used when you meet someone for the first time.' },
   { id: id(), lang: 'en', cat: 0, en: "I'm learning Japanese because I love anime.", ipaUs: '/aɪm ˈlɜːrnɪŋ ˌdʒæpəˈniːz bɪˈkɔːz aɪ lʌv ˈænəmeɪ/', ipaUk: '/aɪm ˈlɜːnɪŋ ˌdʒæpəˈniːz bɪˈkɒz aɪ lʌv ˈænɪmeɪ/', gloss: 'Explaining a reason for studying a language.' },
   { id: id(), lang: 'en', cat: 0, en: 'My hobbies include reading and badminton.', ipaUs: '/maɪ ˈhɑːbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/', ipaUk: '/maɪ ˈhɒbiz ɪnˈkluːd ˈriːdɪŋ ənd ˈbædmɪntən/', gloss: "Listing your hobbies; 'include' means some of the things you enjoy." },
 
-  { id: id(), lang: 'en', cat: 1, en: "I'd like a glass of water, please.", ipaUs: '/aɪd laɪk ə ɡlæs əv ˈwɔːtər pliːz/', ipaUk: '/aɪd laɪk ə ɡlɑːs əv ˈwɔːtə pliːz/', gloss: "A polite way to order a drink; 'I'd like' = 'I want'." },
-  { id: id(), lang: 'en', cat: 1, en: 'Could I have the menu, please?', ipaUs: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', ipaUk: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', gloss: 'A polite request to see the menu.' },
-  { id: id(), lang: 'en', cat: 1, en: 'Is this dish spicy?', ipaUs: '/ɪz ðɪs dɪʃ ˈspaɪsi/', ipaUk: '/ɪz ðɪs dɪʃ ˈspaɪsi/', gloss: 'Asking how hot or strong the food is.' },
-  { id: id(), lang: 'en', cat: 1, en: "I'm allergic to peanuts.", ipaUs: '/aɪm əˈlɜːrdʒɪk tə ˈpiːnʌts/', ipaUk: '/aɪm əˈlɜːdʒɪk tə ˈpiːnʌts/', gloss: 'An important phrase to tell staff about a food allergy.' },
-  { id: id(), lang: 'en', cat: 1, en: 'Can we get the bill, please?', ipaUs: '/kæn wi ɡet ðə bɪl pliːz/', ipaUk: '/kæn wi ɡet ðə bɪl pliːz/', gloss: 'A polite way to ask for the check at the end of a meal.' },
+  // Finance & Investing
+  { id: id(), lang: 'en', cat: 1, en: 'The market rallied this morning on stronger-than-expected earnings.', ipaUs: '/ðə ˈmɑːrkɪt ˈrælid ðɪs ˈmɔːrnɪŋ ɑːn ˈstrɔːŋɡər ðæn ɪkˈspektɪd ˈɜːrnɪŋz/', ipaUk: '/ðə ˈmɑːkɪt ˈrælid ðɪs ˈmɔːnɪŋ ɒn ˈstrɒŋɡə ðæn ɪkˈspektɪd ˈɜːnɪŋz/', gloss: "A rally is a broad price rise; 'on' = because of. Earnings are company profits reported quarterly." },
+  { id: id(), lang: 'en', cat: 1, en: "We're looking to diversify our portfolio across asset classes.", ipaUs: '/wɪr ˈlʊkɪŋ tə daɪˈvɜːrsəfaɪ aʊər pɔːrtˈfoʊlioʊ əˈkrɔːs ˈæset ˈklæsɪz/', ipaUk: '/wɪə ˈlʊkɪŋ tə daɪˈvɜːsɪfaɪ aʊə pɔːtˈfəʊliəʊ əˈkrɒs ˈæset ˈklɑːsɪz/', gloss: "Diversify = spread risk by holding different kinds of assets. Asset classes include stocks, bonds, cash." },
+  { id: id(), lang: 'en', cat: 1, en: 'The stock is trading at a premium to its book value.', ipaUs: '/ðə stɑːk ɪz ˈtreɪdɪŋ ət ə ˈpriːmiəm tə ɪts bʊk ˈvæljuː/', ipaUk: '/ðə stɒk ɪz ˈtreɪdɪŋ ət ə ˈpriːmiəm tə ɪts bʊk ˈvæljuː/', gloss: 'A stock above book value is priced higher than the accounting value of its assets.' },
+  { id: id(), lang: 'en', cat: 1, en: 'Interest rates have a direct impact on bond prices.', ipaUs: '/ˈɪntrəst reɪts hæv ə dəˈrekt ˈɪmpækt ɑːn bɑːnd ˈpraɪsɪz/', ipaUk: '/ˈɪntrəst reɪts hæv ə daɪˈrekt ˈɪmpækt ɒn bɒnd ˈpraɪsɪz/', gloss: "Impact = effect. When rates rise, existing bond prices typically fall." },
+  { id: id(), lang: 'en', cat: 1, en: 'Our risk tolerance is conservative, so we favor fixed income.', ipaUs: '/aʊər rɪsk ˈtɑːlərəns ɪz kənˈsɜːrvətɪv soʊ wi ˈfeɪvər fɪkst ˈɪnkʌm/', ipaUk: '/aʊə rɪsk ˈtɒlərəns ɪz kənˈsɜːvətɪv səʊ wi ˈfeɪvə fɪkst ˈɪnkʌm/', gloss: 'Risk tolerance = how much risk you accept; fixed income = bonds, a lower-risk asset class.' },
+  { id: id(), lang: 'en', cat: 1, en: 'We should hedge the position to protect against downside.', ipaUs: '/wi ʃʊd hedʒ ðə pəˈzɪʃən tə prəˈtekt əˈɡenst ˈdaʊnsaɪd/', ipaUk: '/wi ʃʊd hedʒ ðə pəˈzɪʃən tə prəˈtekt əˈɡenst ˈdaʊnsaɪd/', gloss: "Hedge = take a counterbalancing position to reduce risk; downside = potential loss." },
+  { id: id(), lang: 'en', cat: 1, en: 'The fund returned 12% net of fees last year.', ipaUs: '/ðə fʌnd rɪˈtɜːrnd twɛlv ˈpɜːrsənt net əv fiːz læst jɪr/', ipaUk: '/ðə fʌnd rɪˈtɜːnd twɛlv pəˈsent net əv fiːz lɑːst jɪə/', gloss: "Net of fees = after costs; return = the gain or loss an investment produces." },
+  { id: id(), lang: 'en', cat: 1, en: "Let's review the quarterly earnings and cash flow before deciding.", ipaUs: '/lets rɪˈvjuː ðə ˈkwɔːrtərli ˈɜːrnɪŋz ənd kæʃ floʊ bɪˈfɔːr dɪˈsaɪdɪŋ/', ipaUk: '/lets rɪˈvjuː ðə ˈkwɔːtəli ˈɜːnɪŋz ənd kæʃ fləʊ bɪˈfɔː dɪˈsaɪdɪŋ/', gloss: 'Earnings and cash flow are key financial-health signals when evaluating a company.' },
 
-  { id: id(), lang: 'en', cat: 2, en: "How's it going today?", ipaUs: '/haʊz ɪt ˈɡoʊɪŋ təˈdeɪ/', ipaUk: '/haʊz ɪt ˈɡəʊɪŋ təˈdeɪ/', gloss: 'An informal greeting asking how someone is.' },
-  { id: id(), lang: 'en', cat: 2, en: "It's been a busy week for me.", ipaUs: '/ɪts bɪn ə ˈbɪzi wiːk fər miː/', ipaUk: '/ɪts bɪn ə ˈbɪzi wiːk fə miː/', gloss: 'Saying your week has been full of activity.' },
-  { id: id(), lang: 'en', cat: 2, en: 'What do you usually do on weekends?', ipaUs: '/wʌt də ju ˈjuːʒuəli duː ɑːn ˈwiːkendz/', ipaUk: '/wɒt də ju ˈjuːʒuəli duː ɒn ˈwiːkendz/', gloss: 'Asking about someone\u2019s weekend routine.' },
-  { id: id(), lang: 'en', cat: 2, en: "I'm really into photography.", ipaUs: '/aɪm ˈriːəli ˈɪntuː fəˈtɑːɡrəfi/', ipaUk: '/aɪm ˈrɪəli ˈɪntuː fəˈtɒɡrəfi/', gloss: "Informally, 'into' means strongly interested in." },
-  { id: id(), lang: 'en', cat: 2, en: "Let's grab coffee sometime.", ipaUs: '/lets ɡræb ˈkɔːfi ˈsʌmtaɪm/', ipaUk: '/lets ɡræb ˈkɒfi ˈsʌmtaɪm/', gloss: 'A friendly, casual invitation to meet up.' },
+  // Quant & Computer Science
+  { id: id(), lang: 'en', cat: 2, en: 'We backtest the strategy on historical data before going live.', ipaUs: '/wi ˈbæktest ðə ˈstrætədʒi ɑːn hɪˈstɔːrɪkəl ˈdeɪtə bɪˈfɔːr ˈɡoʊɪŋ laɪv/', ipaUk: '/wi ˈbæktest ðə ˈstrætədʒi ɒn hɪˈstɒrɪkəl ˈdeɪtə bɪˈfɔː ˈɡəʊɪŋ laɪv/', gloss: 'Backtesting = testing a trading rule against past data to see how it would have performed.' },
+  { id: id(), lang: 'en', cat: 2, en: 'The model overfits the training set, so we need more regularization.', ipaUs: '/ðə ˈmɑːdəl ˌoʊvərˈfɪts ðə ˈtreɪnɪŋ set soʊ wi niːd mɔːr ˌreɡjələraɪˈzeɪʃən/', ipaUk: '/ðə ˈmɒdəl ˌəʊvəˈfɪts ðə ˈtreɪnɪŋ set səʊ wi niːd mɔː ˌreɡjələraɪˈzeɪʃən/', gloss: 'Overfit = a model that fits past data too closely and fails on new data; regularization controls complexity.' },
+  { id: id(), lang: 'en', cat: 2, en: 'We engineered features from price and volume data for the predictor.', ipaUs: '/wi ˌendʒɪˈnɪrd ˈfiːtʃərz frəm praɪs ənd ˈvɑːljuːm ˈdeɪtə fər ðə prɪˈdɪktər/', ipaUk: '/wi ˌendʒɪˈnɪəd ˈfiːtʃəz frɒm praɪs ənd ˈvɒljuːm ˈdeɪtə fə ðə prɪˈdɪktə/', gloss: 'Feature engineering = creating useful input variables for a model.' },
+  { id: id(), lang: 'en', cat: 2, en: 'Latency matters: we optimize the data pipeline end to end.', ipaUs: '/ˈleɪtənsi ˈmætərz wi ˈɑːptɪmaɪz ðə ˈdeɪtə ˈpaɪplaɪn end tə end/', ipaUk: '/ˈleɪtənsi ˈmætəz wi ˈɒptɪmaɪz ðə ˈdeɪtə ˈpaɪplaɪn end tə end/', gloss: 'Latency = delay; a pipeline is the chain of steps that processes data.' },
+  { id: id(), lang: 'en', cat: 2, en: 'The strategy has a positive Sharpe ratio, but the drawdown is deep.', ipaUs: '/ðə ˈstrætədʒi hæz ə ˈpɑːzətɪv ʃɑːrp ˈreɪʃioʊ bət ðə ˈdrɔːdaʊn ɪz diːp/', ipaUk: '/ðə ˈstrætədʒi hæz ə ˈpɒzətɪv ʃɑːp ˈreɪʃiəʊ bət ðə ˈdrɔːdaʊn ɪz diːp/', gloss: 'Sharpe ratio measures risk-adjusted return; drawdown is the peak-to-trough decline in value.' },
+  { id: id(), lang: 'en', cat: 2, en: "We run A/B tests and monitor the p-values for significance.", ipaUs: '/wi rʌn eɪ biː tests ənd ˈmɑːnɪtər ðə piː ˈvæljuːz fər sɪɡˈnɪfɪkəns/', ipaUk: '/wi rʌn eɪ biː tests ənd ˈmɒnɪtə ðə piː ˈvæljuːz fə sɪɡˈnɪfɪkəns/', gloss: 'A/B testing compares two versions; a low p-value suggests the result is unlikely due to chance.' },
+  { id: id(), lang: 'en', cat: 2, en: 'The order book shows strong liquidity, so execution should be smooth.', ipaUs: '/ði ˈɔːrdər bʊk ʃoʊz strɔːŋ lɪˈkwɪdəti soʊ ˌeksɪˈkjuːʃən ʃʊd bi smuːð/', ipaUk: '/ði ˈɔːdə bʊk ʃəʊz strɒŋ lɪˈkwɪdəti səʊ ˌeksɪˈkjuːʃən ʃʊd bi smuːð/', gloss: "Liquidity = how easily something can be bought or sold without moving the price." },
 
-  { id: id(), lang: 'en', cat: 3, en: "I think it's a great idea.", ipaUs: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdiːə/', ipaUk: '/aɪ θɪŋk ɪts ə ɡreɪt aɪˈdɪə/', gloss: 'Giving a positive opinion.' },
-  { id: id(), lang: 'en', cat: 3, en: 'In my opinion, the plan needs more work.', ipaUs: '/ɪn maɪ əˈpɪnjən ðə plæn niːdz mɔːr wɜːrk/', ipaUk: '/ɪn maɪ əˈpɪnjən ðə plæn niːdz mɔː wɜːk/', gloss: 'Introducing a critical opinion politely.' },
-  { id: id(), lang: 'en', cat: 3, en: "To be honest, I'm a bit worried about it.", ipaUs: '/tə bi ˈɑːnɪst aɪm ə bɪt ˈwɜːrid əˈbaʊt ɪt/', ipaUk: '/tə bi ˈɒnɪst aɪm ə bɪt ˈwʌrid əˈbaʊt ɪt/', gloss: 'Expressing concern in a sincere way.' },
+  // Daily Life & Meetings (transition)
+  { id: id(), lang: 'en', cat: 3, en: "How's it going today?", ipaUs: '/haʊz ɪt ˈɡoʊɪŋ təˈdeɪ/', ipaUk: '/haʊz ɪt ˈɡəʊɪŋ təˈdeɪ/', gloss: 'An informal greeting asking how someone is.' },
+  { id: id(), lang: 'en', cat: 3, en: "It's been a busy week for me.", ipaUs: '/ɪts bɪn ə ˈbɪzi wiːk fər miː/', ipaUk: '/ɪts bɪn ə ˈbɪzi wiːk fə miː/', gloss: 'Saying your week has been full of activity.' },
+  { id: id(), lang: 'en', cat: 3, en: "Let's grab coffee sometime.", ipaUs: '/lets ɡræb ˈkɔːfi ˈsʌmtaɪm/', ipaUk: '/lets ɡræb ˈkɒfi ˈsʌmtaɪm/', gloss: 'A friendly, casual invitation to meet up.' },
+  { id: id(), lang: 'en', cat: 3, en: 'Could I have the menu, please?', ipaUs: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', ipaUk: '/kʊd aɪ hæv ðə ˈmenjuː pliːz/', gloss: 'A polite request to see the menu.' },
   { id: id(), lang: 'en', cat: 3, en: "That's a fair point, but I see it differently.", ipaUs: '/ðæts ə fer pɔɪnt bət aɪ siː ɪt ˈdɪfrəntli/', ipaUk: '/ðæts ə feə pɔɪnt bət aɪ siː ɪt ˈdɪfrəntli/', gloss: 'A polite way to disagree with someone.' },
-  { id: id(), lang: 'en', cat: 3, en: "I'd rather not talk about it right now.", ipaUs: '/aɪd ˈræðər nɑːt tɔːk əˈbaʊt ɪt raɪt naʊ/', ipaUk: '/aɪd ˈrɑːðə nɒt tɔːk əˈbaʊt ɪt raɪt naʊ/', gloss: "Polite refusal; 'I'd rather not' = I prefer not to." },
 ];
 
 export const SEED_JA: JaSentence[] = [
+  // Self Introduction
   { id: id(), lang: 'ja', cat: 0, jp: 'こんにちは、はじめまして。', romaji: "Kon'nichiwa, hajimemashite.", gloss: 'Hello, it\u2019s nice to meet you \u2014 used when meeting someone for the first time.' },
-  { id: id(), lang: 'ja', cat: 2, jp: '私は大学生で、コンピューター科学を勉強しています。', romaji: 'Watashi wa daigakusei de, konpyūtā kagaku o benkyō shite imasu.', gloss: "I'm a university student studying computer science." },
-  { id: id(), lang: 'ja', cat: 3, jp: '今日はとても疲れました。', romaji: 'Kyō wa totemo tsukaremashita.', gloss: "I'm very tired today." },
-  { id: id(), lang: 'ja', cat: 1, jp: 'お茶でもいかがですか。', romaji: 'Ocha demo ikaga desu ka.', gloss: 'A polite way to offer someone tea or something to drink.' },
   { id: id(), lang: 'ja', cat: 0, jp: '私は中国の上海から来ました。', romaji: 'Watashi wa Chūgoku no Shanhai kara kimashita.', gloss: 'I came from Shanghai, China.' },
-  { id: id(), lang: 'ja', cat: 3, jp: 'この本は読み終えました。', romaji: 'Kono hon wa yomi oemashita.', gloss: "I've finished reading this book." },
+
+  // Work & Meetings
+  { id: id(), lang: 'ja', cat: 1, jp: '来週の会議はいつがご都合よろしいですか。', romaji: "Raishū no kaigi wa itsu ga gotsugō yoroshii desu ka.", gloss: "When is convenient for you for next week's meeting? (polite)" },
+  { id: id(), lang: 'ja', cat: 1, jp: '提案の締め切りは金曜日までです。', romaji: "Teian no shimekiri wa kin'yōbi made desu.", gloss: 'The deadline for the proposal is Friday.' },
+  { id: id(), lang: 'ja', cat: 1, jp: 'まず現状を整理してから、方針を決めましょう。', romaji: 'Mazu genjō o seiri shite kara, hōshin o kimemashō.', gloss: "Let's first organize the current situation, then decide on the direction." },
+  { id: id(), lang: 'ja', cat: 1, jp: 'ご意見をお聞かせいただけますか。', romaji: 'Go-iken o okikase itadakemasu ka.', gloss: 'Could you share your opinion? (polite request)' },
+
+  // Finance & Investing
+  { id: id(), lang: 'ja', cat: 2, jp: '株式市場は今、非常に変動が激しいです。', romaji: 'Kabushiki shijō wa ima, hijō ni hendō ga hageshii desu.', gloss: 'The stock market is very volatile right now.' },
+  { id: id(), lang: 'ja', cat: 2, jp: 'リスクを分散するために、ポートフォリオを多様化すべきです。', romaji: 'Risuku o bunsan suru tame ni, pōtoforio o tayōka subeki desu.', gloss: 'We should diversify the portfolio to spread risk.' },
+  { id: id(), lang: 'ja', cat: 2, jp: '金利の上昇は株価に影響を与えます。', romaji: 'Kinri no jōshō wa kabuka ni eikyō o ataemasu.', gloss: 'Rising interest rates affect stock prices.' },
+  { id: id(), lang: 'ja', cat: 2, jp: 'この会社の決算は来月発表されます。', romaji: 'Kono kaisha no kessan wa raigetsu happyō saremasu.', gloss: "This company's earnings will be announced next month." },
+
+  // Daily Life
+  { id: id(), lang: 'ja', cat: 3, jp: '今日はとても疲れました。', romaji: 'Kyō wa totemo tsukaremashita.', gloss: "I'm very tired today." },
+  { id: id(), lang: 'ja', cat: 3, jp: 'お茶でもいかがですか。', romaji: 'Ocha demo ikaga desu ka.', gloss: 'A polite way to offer someone tea or something to drink.' },
   { id: id(), lang: 'ja', cat: 3, jp: '明日の予定はまだ決まっていません。', romaji: 'Ashita no yotei wa mada kimatte imasen.', gloss: "My plans for tomorrow aren't decided yet." },
-  { id: id(), lang: 'ja', cat: 3, jp: '友達と一緒に映画を見に行くつもりです。', romaji: 'Tomodachi to issho ni eiga o mi ni iku tsumori desu.', gloss: 'I plan to go watch a movie with my friend.' },
-  { id: id(), lang: 'ja', cat: 1, jp: 'この店はいつも込んでいますね。', romaji: 'Kono mise wa itsumo konde imasu ne.', gloss: "This place is always crowded, isn't it?" },
   { id: id(), lang: 'ja', cat: 3, jp: 'ゆっくり話していただけますか。', romaji: 'Yukkuri hanashite itadakemasu ka.', gloss: 'Could you speak more slowly, please?' },
 ];
 

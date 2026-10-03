@@ -7,15 +7,15 @@ import type { PracticeController } from './types';
 const PROMPTS: Record<Lang, string[]> = {
   en: [
     'Describe your morning routine.',
-    'Talk about a hobby you enjoy.',
-    'Describe your ideal weekend.',
-    'Explain why you are learning Japanese.',
+    'Explain a recent market move you observed.',
+    'Describe how you would value a technology company.',
+    'Talk about a quant or programming project you are working on.',
     'Describe the place you live.',
   ],
   ja: [
     'あなたの朝のルーティンを説明してください。',
-    '好きな趣味について話してください。',
-    '理想の週末を説明してください。',
+    '最近の株式市場の動きについて話してください。',
+    '将来の仕事についての目標を説明してください。',
     '日本語を勉強している理由を説明してください。',
     '住んでいる場所を説明してください。',
   ],

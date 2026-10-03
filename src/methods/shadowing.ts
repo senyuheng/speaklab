@@ -1,6 +1,6 @@
 // Method: Shadowing (core). Listen -> shadow -> record -> self-check -> done.
 import type { Lang } from '../content/content';
-import { catName, type Sentence } from '../content/content';
+import { EN_CATS, JA_CATS, catName, type Sentence } from '../content/content';
 import { getState, recordPractice } from '../state/store';
 import { sentenceIpa } from '../state/settings';
 import { speak, RecordingController } from '../speech/speech';
@@ -60,7 +60,7 @@ export class Shadowing implements PracticeController {
   }
 
   private cats(): string[] {
-    return this.lang === 'en' ? ['Self Introduction', 'Ordering Food', 'Daily Small Talk', 'Opinions & Feelings'] : ['Self Introduction', 'At a Café', 'Study & Work', 'Daily Life'];
+    return this.lang === 'en' ? EN_CATS : JA_CATS;
   }
 
   private render(): void {
