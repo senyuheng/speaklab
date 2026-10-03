@@ -1,6 +1,7 @@
-// Service: speech engine (locked TTS voices / recording / approximate scoring)
+// Service: TTS engine switcher — system voices now, cloud engines reserved
 import type { Lang, Accent } from '../content/content';
 import { voiceLang } from '../state/settings';
+import { getState } from '../state/store';
 import { similarity } from '../lib/similarity';
 
 export interface SpeechResult {
@@ -8,27 +9,81 @@ export interface SpeechResult {
   recognized: string;
 }
 
-// TTS: pick the voice matching the locked accent (US/UK never mixed)
-function pickVoice(lang: Lang, accent: Accent): SpeechSynthesisVoice | null {
-  if (!('speechSynthesis' in window)) return null;
-  const voices = window.speechSynthesis.getVoices();
-  const prefix = lang === 'ja' ? 'ja' : accent === 'UK' ? 'en-GB' : 'en-US';
-  let v = voices.find((x) => x.lang && x.lang.toLowerCase().startsWith(prefix.toLowerCase()));
-  if (!v && lang === 'en') v = voices.find((x) => /^en[-_]/.test(x.lang || ''));
-  if (!v && lang === 'ja') v = voices.find((x) => /^ja[-_]/.test(x.lang || ''));
-  return v ?? null;
+export interface VoiceMeta {
+  id: string;
+  name: string;
+  lang: string;
+}
+
+export interface TtsEngine {
+  id: string;
+  label: string;
+  kind: 'local' | 'cloud';
+  available(): boolean;
+  listVoices(): VoiceMeta[];
+  speak(text: string, lang: Lang, accent: Accent, rate: number, voiceId: string, cb?: () => void): void;
+}
+
+function systemVoices(): SpeechSynthesisVoice[] {
+  if (!('speechSynthesis' in window)) return [];
+  return window.speechSynthesis.getVoices();
+}
+
+// System voice engine (Web Speech). Accent is locked: en-US for US, en-GB for UK, never mixed.
+const SYSTEM: TtsEngine = {
+  id: 'system',
+  label: 'System voice',
+  kind: 'local',
+  available: () => 'speechSynthesis' in window && systemVoices().length > 0,
+  listVoices: () => systemVoices().map((v) => ({ id: v.name, name: v.name, lang: v.lang || 'other' })),
+  speak(text, lang, accent, rate, voiceId, cb) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const voices = systemVoices();
+    let v = voiceId ? voices.find((x) => x.name === voiceId) : undefined;
+    if (!v) {
+      const prefix = lang === 'ja' ? 'ja' : accent === 'UK' ? 'en-GB' : 'en-US';
+      v = voices.find((x) => x.lang && x.lang.toLowerCase().startsWith(prefix.toLowerCase()));
+      if (!v && lang === 'en') v = voices.find((x) => /^en[-_]/.test(x.lang || ''));
+      if (!v && lang === 'ja') v = voices.find((x) => /^ja[-_]/.test(x.lang || ''));
+    }
+    if (v) u.voice = v;
+    u.lang = v ? v.lang : voiceLang(lang, getState().settings);
+    u.rate = rate || 0.9;
+    if (cb) u.onend = cb;
+    window.speechSynthesis.speak(u);
+  },
+};
+
+// Cloud engines: reserved placeholders until an API key is configured in a tiny relay.
+function cloudStub(id: string, label: string): TtsEngine {
+  return {
+    id,
+    label,
+    kind: 'cloud',
+    available: () => false,
+    listVoices: () => [],
+    speak() {
+      /* inactive until an API key is added */
+    },
+  };
+}
+
+const DOUBAO = cloudStub('doubao', 'Doubao · Volcano TTS');
+const AZURE = cloudStub('azure', 'Azure Neural');
+const ELEVEN = cloudStub('elevenlabs', 'ElevenLabs');
+
+export const ENGINES: TtsEngine[] = [SYSTEM, DOUBAO, AZURE, ELEVEN];
+
+export function engineById(id: string): TtsEngine {
+  return ENGINES.find((e) => e.id === id) ?? SYSTEM;
 }
 
 export function speak(text: string, lang: Lang, accent: Accent, rate: number, cb?: () => void): void {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const v = pickVoice(lang, accent);
-  if (v) u.voice = v;
-  u.lang = v ? v.lang : voiceLang(lang, { accent, rate, score: 'on', dailyGoal: 8 });
-  u.rate = rate || 0.9;
-  if (cb) u.onend = cb;
-  window.speechSynthesis.speak(u);
+  const s = getState().settings;
+  let eng = engineById(s.voiceEngine);
+  if (!eng.available()) eng = SYSTEM; // training must never go silent
+  eng.speak(text, lang, accent, rate, s.voiceId ?? '', cb);
 }
 
 export function stopSpeaking(): void {
@@ -38,6 +93,12 @@ export function stopSpeaking(): void {
 export function primeVoices(): void {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.getVoices();
+}
+
+export function subscribeVoices(cb: () => void): void {
+  if (!('speechSynthesis' in window)) return;
+  const ss = window.speechSynthesis as SpeechSynthesis & { onvoiceschanged: (() => void) | null };
+  ss.onvoiceschanged = () => cb();
 }
 
 // Recording + approximate scoring
@@ -74,7 +135,7 @@ export class RecordingController {
     if (wantScore && SR) {
       try {
         this.recognition = new SR();
-        this.recognition.lang = voiceLang(lang, { accent, rate: 0.9, score: 'on', dailyGoal: 8 });
+        this.recognition.lang = voiceLang(lang, getState().settings);
         this.recognition.continuous = true;
         this.recognition.interimResults = false;
         this.recognition.onresult = (e) => {

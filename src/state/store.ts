@@ -7,6 +7,8 @@ export interface Settings {
   rate: number;
   score: 'on' | 'off';
   dailyGoal: number;
+  voiceEngine: string;
+  voiceId: string;
 }
 
 export interface ProgEntry {
@@ -33,6 +35,8 @@ const DEFAULT_SETTINGS: Settings = {
   rate: 0.9,
   score: 'on',
   dailyGoal: 8,
+  voiceEngine: 'system',
+  voiceId: '',
 };
 
 function seedSentences(): Sentence[] {
